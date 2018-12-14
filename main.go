@@ -25,11 +25,13 @@ func printTree(node *Node) {
 }
 
 func printTreeWithIndentation(node *Node, indentation int) {
+	repeatSpaces := strings.Repeat(" ", indentation)
+
 	switch n := node.NodeType.(type) {
 	case string:
-		fmt.Printf("%stext: %s\n", strings.Repeat(" ", indentation), n)
+		fmt.Printf("%stext: %s\n", repeatSpaces, n)
 	case Element:
-		fmt.Printf("%stag: %s", strings.Repeat(" ", indentation), n.TagName)
+		fmt.Printf("%stag: %s", repeatSpaces, n.TagName)
 
 		if n.Attributes != nil {
 			fmt.Printf(" attrs: %v\n", n.Attributes)
