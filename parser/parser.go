@@ -1,6 +1,10 @@
 package parser
 
-import "gitlab.com/mvanbrummen/browser-engine/dom"
+import (
+	"fmt"
+
+	"gitlab.com/mvanbrummen/browser-engine/dom"
+)
 
 type Parser interface {
 	NextChar() rune
@@ -34,5 +38,12 @@ func NewDOMParser(source string) *DOMParser {
 }
 
 func (p *DOMParser) NextChar() rune {
+	if p.EOF() {
+		panic(fmt.Sprintf("Cannot get %d for %s end of file", p.pos, p.source))
+	}
 	return []rune(p.source)[p.pos+1]
+}
+
+func (p *DOMParser) EOF() bool {
+	return p.pos == uint(len(p.source))-1
 }
