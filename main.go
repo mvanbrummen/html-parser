@@ -1,21 +1,19 @@
 package main
 
-import (
-	"gitlab.com/mvanbrummen/browser-engine/browser"
-)
+import "gitlab.com/mvanbrummen/browser-engine/dom"
 
 func main() {
-	tree := browser.NewElementNode("html", map[string]string{
+	tree := dom.NewElementNode("html", map[string]string{
 		"language": "en",
-	}, []*browser.Node{
-		browser.NewElementNode("div", nil, []*browser.Node{
-			browser.NewElementNode("div", nil, []*browser.Node{
-				browser.NewTextNode("Hello"),
-				browser.NewTextNode("Some Text"),
-				browser.NewTextNode("Some more text"),
+	}, []*dom.Node{
+		dom.NewElementNode("div", nil, []*dom.Node{
+			dom.NewElementNode("div", nil, []*dom.Node{
+				dom.NewTextNode("Hello"),
+				dom.NewTextNode("Some Text"),
+				dom.NewTextNode("Some more text"),
 			}),
 		}),
 	})
 
-	browser.PrintTree(tree)
+	dom.PrintTree(tree)
 }
