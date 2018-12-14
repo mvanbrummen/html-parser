@@ -20,3 +20,19 @@ type Parser interface {
 
 	Parse(source string) *dom.Node
 }
+
+type DOMParser struct {
+	pos    uint
+	source string
+}
+
+func NewDOMParser(source string) *DOMParser {
+	return &DOMParser{
+		0,
+		source,
+	}
+}
+
+func (p *DOMParser) NextChar() rune {
+	return []rune(p.source)[p.pos+1]
+}
