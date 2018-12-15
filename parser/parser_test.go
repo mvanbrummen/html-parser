@@ -379,3 +379,22 @@ func TestDOMParser_ParseNodes(t *testing.T) {
 		})
 	}
 }
+
+func Test_Parse(t *testing.T) {
+	type args struct {
+		source string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"Should parse successfully with root node", args{`<html language="en"><div id="test1"><p>Hi <strong>you</strong></p></div></html>`}},
+		{"Should parse successfully without root node", args{`<div language="en"><div id="test1"><p>Hi <strong>you</strong></p></div></div><div></div>`}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			assert.NotNil(t, Parse(tt.args.source))
+		})
+	}
+}

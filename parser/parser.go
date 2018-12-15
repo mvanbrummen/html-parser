@@ -22,8 +22,6 @@ type Parser interface {
 	ParseAttrValue() string
 	ParseAttributes() dom.AttrMap
 	ParseNodes() []*dom.Node
-
-	Parse(source string) *dom.Node
 }
 
 type DOMParser struct {
@@ -184,8 +182,8 @@ func (p *DOMParser) ParseAttr() (string, string) {
 	return name, value
 }
 
-func (p *DOMParser) Parse(source string) *dom.Node {
-	nodes := p.ParseNodes()
+func Parse(source string) *dom.Node {
+	nodes := NewDOMParser(source).ParseNodes()
 
 	if len(nodes) == 1 {
 		return nodes[0]
