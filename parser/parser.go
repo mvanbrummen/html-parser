@@ -12,7 +12,7 @@ type Parser interface {
 	StartsWith(str string) bool
 	EOF() bool
 	ConsumeChar() rune
-	ConsumeWhile(predicate func(r rune) bool) string
+	ConsumeWhile(predicate func(rune) bool) string
 	ConsumeWhitespace()
 	ParseTagName() string
 	ParseNode() dom.Node
@@ -42,11 +42,11 @@ func (p *DOMParser) NextChar() rune {
 	if p.EOF() {
 		panic(fmt.Sprintf("Cannot get %d for %s end of file", p.pos, p.source))
 	}
-	return []rune(p.source)[p.pos+1]
+	return []rune(p.source)[p.pos]
 }
 
 func (p *DOMParser) EOF() bool {
-	return p.pos == uint(len(p.source))-1
+	return p.pos == uint(len(p.source))
 }
 
 func (p *DOMParser) StartsWith(str string) bool {
@@ -57,6 +57,18 @@ func (p *DOMParser) ConsumeChar() rune {
 	if p.EOF() {
 		panic(fmt.Sprintf("Cannot get %d for %s end of file", p.pos, p.source))
 	}
+	char := []rune(p.source)[p.pos]
+
 	p.pos++
-	return []rune(p.source)[p.pos]
+
+	return char
+}
+
+func (p *DOMParser) ConsumeWhile(predicate func(rune) bool) string {
+	str := ""
+	for !p.EOF() && predicate(p.NextChar()) {
+		str = fmt.Sprintf("%s%c", str, p.ConsumeChar())
+	}
+
+	return str
 }
