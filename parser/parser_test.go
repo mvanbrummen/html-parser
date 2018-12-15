@@ -311,3 +311,28 @@ func TestDOMParser_ParseAttr(t *testing.T) {
 		})
 	}
 }
+
+func TestDOMParser_ParseAttributes(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   dom.AttrMap
+	}{
+		{"Should parse attributes", fields{0, ` name="foo" style="red">`}, dom.AttrMap{"name": "foo", "style": "red"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if got := p.ParseAttributes(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DOMParser.ParseAttributes() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

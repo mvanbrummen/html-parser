@@ -133,7 +133,20 @@ func (p *DOMParser) ParseNodes() []*dom.Node {
 }
 
 func (p *DOMParser) ParseAttributes() dom.AttrMap {
-	return nil
+	attributes := make(dom.AttrMap, 0)
+
+	for {
+		p.ConsumeWhitespace()
+
+		if p.NextChar() == '>' {
+			break
+		}
+		name, value := p.ParseAttr()
+
+		attributes[name] = value
+	}
+
+	return attributes
 }
 
 func (p *DOMParser) ParseAttrValue() string {
