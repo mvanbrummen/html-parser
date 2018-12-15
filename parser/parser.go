@@ -104,8 +104,9 @@ func (p *DOMParser) ParseText() *dom.Node {
 }
 
 func assertConsumeChar(p *DOMParser, r rune) {
-	if p.ConsumeChar() != r {
-		panic(fmt.Sprintf("Expected a '%c'", r))
+	char := p.ConsumeChar()
+	if char != r {
+		panic(fmt.Sprintf("Expected a '%c' but got a '%c' at pos %d.", r, char, p.pos))
 	}
 }
 
@@ -129,7 +130,19 @@ func (p *DOMParser) ParseElement() *dom.Node {
 }
 
 func (p *DOMParser) ParseNodes() []*dom.Node {
-	return nil
+	nodes := make([]*dom.Node, 0)
+
+	for {
+		p.ConsumeWhitespace()
+
+		if p.EOF() || p.StartsWith("</") {
+			break
+		}
+
+		nodes = append(nodes, p.ParseNode())
+	}
+
+	return nodes
 }
 
 func (p *DOMParser) ParseAttributes() dom.AttrMap {
@@ -169,4 +182,14 @@ func (p *DOMParser) ParseAttr() (string, string) {
 	value := p.ParseAttrValue()
 
 	return name, value
+}
+
+func (p *DOMParser) Parse(source string) *dom.Node {
+	nodes := p.ParseNodes()
+
+	if len(nodes) == 1 {
+		return nodes[0]
+	} else {
+		return dom.NewElementNode("html", nil, nodes)
+	}
 }

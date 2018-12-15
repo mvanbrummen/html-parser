@@ -239,11 +239,16 @@ func TestDOMParser_ParseElement(t *testing.T) {
 	}{
 		{
 			"Should parse element node",
-			fields{0, `<div id="test">hello</div>`},
-			dom.NewElementNode("div", nil, nil),
+			fields{0, `<div id="test"><p>hello</p></div>`},
+			dom.NewElementNode("div", map[string]string{"id": "test"},
+				[]*dom.Node{
+					dom.NewElementNode("p", nil, []*dom.Node{
+						dom.NewTextNode("hello"),
+					}),
+				}),
 		},
 	}
-	//  map[string]string{"id": "test"}, []*dom.Node{dom.NewTextNode("hello")}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &DOMParser{
@@ -332,6 +337,31 @@ func TestDOMParser_ParseAttributes(t *testing.T) {
 			}
 			if got := p.ParseAttributes(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("DOMParser.ParseAttributes() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDOMParser_ParseNode(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *dom.Node
+	}{
+		{"Should parse text node", fields{0, "hello<em>"}, dom.NewTextNode("hello")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if got := p.ParseNode(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DOMParser.ParseNode() = %v, want %v", got, tt.want)
 			}
 		})
 	}
