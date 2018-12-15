@@ -20,7 +20,7 @@ type Parser interface {
 	ParseElement() *dom.Node
 	ParseAttr() (string, string)
 	ParseAttrValue() string
-	ParseAttributes() *dom.AttrMap
+	ParseAttributes() dom.AttrMap
 	ParseNodes() []*dom.Node
 
 	Parse(source string) *dom.Node
@@ -85,6 +85,15 @@ func (p *DOMParser) ParseTagName() string {
 	return p.ConsumeWhile(isAlphaNumeric)
 }
 
+func (p *DOMParser) ParseNode() *dom.Node {
+	switch p.NextChar() {
+	case '<':
+		return p.ParseElement()
+	default:
+		return p.ParseText()
+	}
+}
+
 func (p *DOMParser) ParseText() *dom.Node {
 	isNotOpeningBracket := func(r rune) bool {
 		return r != '<'
@@ -92,4 +101,51 @@ func (p *DOMParser) ParseText() *dom.Node {
 	str := p.ConsumeWhile(isNotOpeningBracket)
 
 	return dom.NewTextNode(str)
+}
+
+func assertConsumeChar(p *DOMParser, r rune) {
+	if p.ConsumeChar() != r {
+		panic(fmt.Sprintf("Expected a '%c'", r))
+	}
+}
+
+func (p *DOMParser) ParseElement() *dom.Node {
+	assertConsumeChar(p, '<')
+	tagName := p.ParseTagName()
+	attributes := p.ParseAttributes()
+
+	assertConsumeChar(p, '>')
+
+	children := p.ParseNodes()
+
+	assertConsumeChar(p, '<')
+	assertConsumeChar(p, '/')
+	if p.ParseTagName() != tagName {
+		panic("Closing tagname was not " + tagName)
+	}
+	assertConsumeChar(p, '>')
+
+	return dom.NewElementNode(tagName, attributes, children)
+}
+
+func (p *DOMParser) ParseNodes() []*dom.Node {
+	return nil
+}
+
+func (p *DOMParser) ParseAttributes() dom.AttrMap {
+	return nil
+}
+
+func (p *DOMParser) ParseAttrValue() string {
+	openQuote := p.ConsumeChar()
+
+	if openQuote != '"' && openQuote != '\'' {
+		panic(fmt.Sprintf("Expected a quote char but got %c", openQuote))
+	}
+
+	value := p.ConsumeWhile(func(r rune) bool { return r != openQuote })
+
+	assertConsumeChar(p, openQuote)
+
+	return value
 }
