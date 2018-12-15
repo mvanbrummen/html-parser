@@ -1,9 +1,11 @@
 package parser
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/mvanbrummen/browser-engine/dom"
 )
 
 func TestDOMParser_NextChar(t *testing.T) {
@@ -195,6 +197,31 @@ func TestDOMParser_ParseTagName(t *testing.T) {
 			}
 			if got := p.ParseTagName(); got != tt.want {
 				t.Errorf("DOMParser.ParseTagName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDOMParser_ParseText(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *dom.Node
+	}{
+		{"Should parse text node", fields{0, "hello<em>"}, dom.NewTextNode("hello")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if got := p.ParseText(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DOMParser.ParseText() = %v, want %v", got, tt.want)
 			}
 		})
 	}

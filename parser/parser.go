@@ -15,12 +15,12 @@ type Parser interface {
 	ConsumeWhile(predicate func(rune) bool) string
 	ConsumeWhitespace()
 	ParseTagName() string
-	ParseNode() dom.Node
-	ParseText() dom.Node
-	ParseElement() dom.Node
+	ParseNode() *dom.Node
+	ParseText() *dom.Node
+	ParseElement() *dom.Node
 	ParseAttr() (string, string)
 	ParseAttrValue() string
-	ParseAttributes() dom.AttrMap
+	ParseAttributes() *dom.AttrMap
 	ParseNodes() []*dom.Node
 
 	Parse(source string) *dom.Node
@@ -83,4 +83,13 @@ func (p *DOMParser) ParseTagName() string {
 		return (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9')
 	}
 	return p.ConsumeWhile(isAlphaNumeric)
+}
+
+func (p *DOMParser) ParseText() *dom.Node {
+	isNotOpeningBracket := func(r rune) bool {
+		return r != '<'
+	}
+	str := p.ConsumeWhile(isNotOpeningBracket)
+
+	return dom.NewTextNode(str)
 }
