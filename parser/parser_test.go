@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParserNextChar(t *testing.T) {
-	tables := []struct {
+func TestDOMParser_NextChar(t *testing.T) {
+	tests := []struct {
 		pos         uint
 		str         string
 		expected    rune
@@ -18,21 +18,21 @@ func TestParserNextChar(t *testing.T) {
 		{2, "abc", -1, true},
 	}
 
-	for _, table := range tables {
-		p := &DOMParser{table.pos, table.str}
+	for _, test := range tests {
+		p := &DOMParser{test.pos, test.str}
 
-		if table.shouldPanic {
+		if test.shouldPanic {
 			assert.Panics(t, func() { p.NextChar() }, "Expected to panic")
 		} else {
 			result := p.NextChar()
 
-			assert.Equal(t, result, table.expected, "Should be equal")
+			assert.Equal(t, result, test.expected, "Should be equal")
 		}
 	}
 }
 
-func TestParserEOF(t *testing.T) {
-	tables := []struct {
+func TestDOMParser_EOF(t *testing.T) {
+	tests := []struct {
 		pos   uint
 		str   string
 		isEOF bool
@@ -43,11 +43,42 @@ func TestParserEOF(t *testing.T) {
 		{0, "a", true},
 	}
 
-	for _, table := range tables {
-		p := &DOMParser{table.pos, table.str}
+	for _, test := range tests {
+		p := &DOMParser{test.pos, test.str}
 
 		result := p.EOF()
 
-		assert.Equal(t, result, table.isEOF, "Expected %v but got %v.", table.isEOF, result)
+		assert.Equal(t, result, test.isEOF, "Expected %v but got %v.", test.isEOF, result)
+	}
+}
+
+func TestDOMParser_StartsWith(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	type args struct {
+		str string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{"Should return true when starts with", fields{0, "feather"}, args{"feath"}, true},
+		{"Should return true when starts with whole word", fields{0, "feather"}, args{"feather"}, true},
+		{"Should return false when does not start with", fields{0, "feather"}, args{"moo"}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if got := p.StartsWith(tt.args.str); got != tt.want {
+				t.Errorf("DOMParser.StartsWith() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"gitlab.com/mvanbrummen/browser-engine/dom"
 )
@@ -46,4 +47,8 @@ func (p *DOMParser) NextChar() rune {
 
 func (p *DOMParser) EOF() bool {
 	return p.pos == uint(len(p.source))-1
+}
+
+func (p *DOMParser) StartsWith(str string) bool {
+	return strings.HasPrefix(p.source, str)
 }
