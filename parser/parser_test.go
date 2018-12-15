@@ -147,3 +147,29 @@ func TestDOMParser_ConsumeWhile(t *testing.T) {
 		})
 	}
 }
+
+func TestDOMParser_ConsumeWhitespace(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantPos uint
+	}{
+		{"Should consume whitespace", fields{0, "   peacock"}, 3},
+		{"Should consume nothing when no whitespace", fields{0, "peacock"}, 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			p.ConsumeWhitespace()
+
+			assert.Equal(t, p.pos, tt.wantPos, "Should be equal")
+		})
+	}
+}

@@ -72,3 +72,8 @@ func (p *DOMParser) ConsumeWhile(predicate func(rune) bool) string {
 
 	return str
 }
+
+func (p *DOMParser) ConsumeWhitespace() {
+	isWhiteSpace := func(r rune) bool { return r == ' ' }
+	p.ConsumeWhile(isWhiteSpace)
+}
