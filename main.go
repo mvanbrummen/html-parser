@@ -1,19 +1,22 @@
 package main
 
-import "gitlab.com/mvanbrummen/browser-engine/dom"
+import (
+	"gitlab.com/mvanbrummen/browser-engine/dom"
+	"gitlab.com/mvanbrummen/browser-engine/parser"
+)
 
 func main() {
-	tree := dom.NewElementNode("html", map[string]string{
-		"language": "en",
-	}, []*dom.Node{
-		dom.NewElementNode("div", nil, []*dom.Node{
-			dom.NewElementNode("div", nil, []*dom.Node{
-				dom.NewTextNode("Hello"),
-				dom.NewTextNode("Some Text"),
-				dom.NewTextNode("Some more text"),
-			}),
-		}),
-	})
+	html := `
+	<html>
+		<body>
+			<h1>Title</h1>
+			<div id="main" class="test">
+				<p>Hello <em>world</em>!</p>
+			</div>
+		</body>
+	</html>
+	`
+	tree := parser.Parse(html)
 
 	dom.PrintTree(tree)
 }
