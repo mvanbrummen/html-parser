@@ -71,6 +71,7 @@ func TestDOMParser_StartsWith(t *testing.T) {
 		want   bool
 	}{
 		{"Should return true when starts with", fields{0, "feather"}, args{"feath"}, true},
+		{"Should return true when starts with later pos", fields{3, "feather"}, args{"ther"}, true},
 		{"Should return true when starts with whole word", fields{0, "feather"}, args{"feather"}, true},
 		{"Should return false when does not start with", fields{0, "feather"}, args{"moo"}, false},
 	}

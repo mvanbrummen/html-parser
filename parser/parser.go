@@ -50,7 +50,7 @@ func (p *DOMParser) EOF() bool {
 }
 
 func (p *DOMParser) StartsWith(str string) bool {
-	return strings.HasPrefix(p.source, str)
+	return strings.HasPrefix(p.source[p.pos:], str)
 }
 
 func (p *DOMParser) ConsumeChar() rune {
