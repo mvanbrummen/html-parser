@@ -281,3 +281,33 @@ func TestDOMParser_ParseAttrValue(t *testing.T) {
 		})
 	}
 }
+
+func TestDOMParser_ParseAttr(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+		want1  string
+	}{
+		{"Should parse attribute", fields{0, `id="testId"`}, "id", "testId"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			got, got1 := p.ParseAttr()
+			if got != tt.want {
+				t.Errorf("DOMParser.ParseAttr() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("DOMParser.ParseAttr() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}

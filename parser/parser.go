@@ -149,3 +149,11 @@ func (p *DOMParser) ParseAttrValue() string {
 
 	return value
 }
+
+func (p *DOMParser) ParseAttr() (string, string) {
+	name := p.ParseTagName()
+	assertConsumeChar(p, '=')
+	value := p.ParseAttrValue()
+
+	return name, value
+}
