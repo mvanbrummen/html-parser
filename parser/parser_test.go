@@ -82,3 +82,35 @@ func TestDOMParser_StartsWith(t *testing.T) {
 		})
 	}
 }
+
+func TestDOMParser_ConsumeChar(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name        string
+		fields      fields
+		want        rune
+		shouldPanic bool
+	}{
+		{"Should return rune when consume char", fields{0, "abc"}, 'b', false},
+		{"Should return rune when consume char", fields{1, "abc"}, 'c', false},
+		{"Should panic when consume char is EOF", fields{2, "abc"}, -1, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if tt.shouldPanic {
+				assert.Panics(t, func() { p.ConsumeChar() }, "Should panic")
+			} else {
+				result := p.ConsumeChar()
+				assert.Equal(t, result, tt.want, "DOMParser.ConsumeChar() = %v, want %v", result, tt.want)
+				assert.Equal(t, p.pos, tt.fields.pos+1, "Pos should have advanced by 1")
+			}
+		})
+	}
+}

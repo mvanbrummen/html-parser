@@ -52,3 +52,11 @@ func (p *DOMParser) EOF() bool {
 func (p *DOMParser) StartsWith(str string) bool {
 	return strings.HasPrefix(p.source, str)
 }
+
+func (p *DOMParser) ConsumeChar() rune {
+	if p.EOF() {
+		panic(fmt.Sprintf("Cannot get %d for %s end of file", p.pos, p.source))
+	}
+	p.pos++
+	return []rune(p.source)[p.pos]
+}
