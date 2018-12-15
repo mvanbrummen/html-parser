@@ -189,7 +189,7 @@ func (p *DOMParser) Parse(source string) *dom.Node {
 
 	if len(nodes) == 1 {
 		return nodes[0]
-	} else {
-		return dom.NewElementNode("html", nil, nodes)
 	}
+
+	return dom.NewElementNode("html", nil, nodes)
 }
