@@ -173,3 +173,29 @@ func TestDOMParser_ConsumeWhitespace(t *testing.T) {
 		})
 	}
 }
+
+func TestDOMParser_ParseTagName(t *testing.T) {
+	type fields struct {
+		pos    uint
+		source string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{"Should parse tag name", fields{0, "div>"}, "div"},
+		{"Should not parse tag name with special chars", fields{0, "&^%$>"}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &DOMParser{
+				pos:    tt.fields.pos,
+				source: tt.fields.source,
+			}
+			if got := p.ParseTagName(); got != tt.want {
+				t.Errorf("DOMParser.ParseTagName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
