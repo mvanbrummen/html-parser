@@ -1,4 +1,4 @@
-BINARY=browser_engine
+BINARY=html_parser
 TESTS=go test $$(go list ./... | grep -v /vendor/) -cover
 
 build:

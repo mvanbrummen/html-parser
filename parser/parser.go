@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"gitlab.com/mvanbrummen/browser-engine/dom"
+	"github.com/mvanbrummen/html-parser/dom"
 )
 
 type Parser interface {

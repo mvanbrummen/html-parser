@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/mvanbrummen/browser-engine/dom"
+	"github.com/mvanbrummen/html-parser/dom"
 )
 
 func TestDOMParser_NextChar(t *testing.T) {

@@ -1,4 +1,4 @@
-module gitlab.com/mvanbrummen/browser-engine
+module github.com/mvanbrummen/html-parser
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

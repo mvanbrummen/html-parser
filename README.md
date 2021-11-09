@@ -1,11 +1,10 @@
-package main
+# HTML Parser
 
-import (
-	"github.com/mvanbrummen/html-parser/dom"
-	"github.com/mvanbrummen/html-parser/parser"
-)
+Toy html parser written in Go
 
-func main() {
+# Example
+
+```go
 	html := `
 	<html>
 		<body>
@@ -19,4 +18,4 @@ func main() {
 	tree := parser.Parse(html)
 
 	dom.PrintTree(tree)
-}
+```
