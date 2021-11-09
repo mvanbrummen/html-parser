@@ -2,9 +2,17 @@
 
 Toy html parser written in Go
 
-# Example
+# Example 
 
 ```go
+package main
+
+import (
+	"github.com/mvanbrummen/html-parser/dom"
+	"github.com/mvanbrummen/html-parser/parser"
+)
+
+func main() {
 	html := `
 	<html>
 		<body>
@@ -18,4 +26,5 @@ Toy html parser written in Go
 	tree := parser.Parse(html)
 
 	dom.PrintTree(tree)
+}
 ```
